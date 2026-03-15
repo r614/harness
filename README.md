@@ -31,7 +31,7 @@ After installation, Pi can load:
 
 Imported Pi-native capabilities currently include:
 
-- `context`, `files`, `review`, `repo-operator`, `gmail-workspace`, `calendar-workspace`, and `browser-runtime` extensions
+- `context`, `files`, `review`, `repo-operator`, `gmail-workspace`, `calendar-workspace`, `browser-runtime`, and `answer` extensions
 - `github`, `commit`, `summarize`, `native-web-search`, `browser`, `gmail`, `calendar`, and `web-browser` skills
 
 ## Real runtime workflows
@@ -40,6 +40,7 @@ Imported Pi-native capabilities currently include:
 - `gmail-workspace`: real Gmail runtime path through local `gws` for search, thread read/summarize, reply draft creation, low-value mail classification, bounded archive handling, and unsubscribe preparation
 - `calendar-workspace`: real Calendar runtime path through local `gws` for upcoming-event summaries plus approval-gated create/update flows
 - `browser-runtime`: persistent local Chrome-backed browser sessions with structured actions for navigate, snapshot, click, fill, extract, screenshot, and assert
+- `answer`: extracts unanswered questions from the last assistant message into an interactive Q&A flow and submits the compiled answers back into the session
 
 ## Local Google Workspace setup
 
