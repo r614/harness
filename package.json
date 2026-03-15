@@ -1,0 +1,13 @@
+{
+  "name": "harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Portable skills and extensions repo for a Pi-style agent",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-manifests.mjs",
+    "evals": "node scripts/run-evals.mjs",
+    "self-improve": "node scripts/open-pr.mjs",
+    "bootstrap": "bash scripts/bootstrap-local.sh"
+  }
+}

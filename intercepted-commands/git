@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+echo "Harness intercepted git wrapper placeholder"

@@ -1,0 +1,20 @@
+{
+  "skills": [
+    {
+      "name": "github",
+      "path": "skills/github/SKILL.md"
+    },
+    {
+      "name": "browser",
+      "path": "skills/browser/SKILL.md"
+    },
+    {
+      "name": "gmail",
+      "path": "skills/gmail/SKILL.md"
+    },
+    {
+      "name": "repo-operator",
+      "path": "skills/repo-operator/SKILL.md"
+    }
+  ]
+}

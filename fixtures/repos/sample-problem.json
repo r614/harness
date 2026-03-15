@@ -1,0 +1,7 @@
+{
+  "title": "Tighten browser extension approval copy",
+  "problem": "Users are confused about when submit actions require approval.",
+  "evidence": [
+    "eval:self-improvement:approval-copy"
+  ]
+}

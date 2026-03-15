@@ -1,0 +1,9 @@
+{
+  "name": "harness",
+  "tone": "practical",
+  "ui": {
+    "primary": "#0f172a",
+    "accent": "#d97706",
+    "surface": "#f8fafc"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "selfImprovement": {
+    "allowedPaths": [
+      "skills/",
+      "extensions/",
+      "commands/",
+      "evals/",
+      "fixtures/",
+      "manifests/",
+      "README.md"
+    ],
+    "requiredChecks": [
+      "npm run validate",
+      "npm run evals"
+    ],
+    "mergePolicy": "human_review_required"
+  }
+}

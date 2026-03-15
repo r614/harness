@@ -1,0 +1,24 @@
+{
+  "name": "repo-operator",
+  "version": "0.1.0",
+  "description": "Prepares self-improvement changes and PR payloads for Harness.",
+  "capabilities": [
+    "list_allowed_paths",
+    "prepare_change_summary",
+    "validate_repo",
+    "open_pr_request"
+  ],
+  "entrypoint": "./repo-operator.mjs",
+  "requiredSecrets": [],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "repoRoot": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "repoRoot"
+    ]
+  }
+}

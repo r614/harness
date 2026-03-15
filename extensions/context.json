@@ -1,0 +1,23 @@
+{
+  "name": "context",
+  "version": "0.1.0",
+  "description": "Provides durable context and retrieval helpers for Pi.",
+  "capabilities": [
+    "read_context",
+    "write_memory",
+    "summarize_history"
+  ],
+  "entrypoint": "./context.mjs",
+  "requiredSecrets": [],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "memoryDir": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "memoryDir"
+    ]
+  }
+}

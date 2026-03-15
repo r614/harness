@@ -1,0 +1,10 @@
+{
+  "threadId": "sample-thread-1",
+  "subject": "Quarterly planning",
+  "messages": [
+    {
+      "from": "teammate@example.com",
+      "body": "Can you share a draft by Friday?"
+    }
+  ]
+}

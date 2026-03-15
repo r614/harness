@@ -1,0 +1,12 @@
+{
+  "extensions": [
+    {
+      "name": "context",
+      "manifest": "extensions/context.json"
+    },
+    {
+      "name": "repo-operator",
+      "manifest": "extensions/repo-operator.json"
+    }
+  ]
+}
