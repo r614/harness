@@ -8,10 +8,14 @@
     "pi",
     "agent",
     "skills",
-    "extensions"
+    "extensions",
+    "pi-extension",
+    "pi-skill",
+    "pi-theme"
   ],
   "files": [
     "AGENTS.md",
+    "NOTICE",
     "README.md",
     "extensions/",
     "skills/",
@@ -20,12 +24,16 @@
     "commands/",
     "fixtures/",
     "manifests/",
-    "scripts/"
+    "scripts/",
+    "vendor/"
   ],
   "pi": {
     "extensions": [
+      "./extensions/context.ts",
+      "./extensions/files.ts",
       "./extensions/harness-help.ts",
-      "./extensions/repo-operator.ts"
+      "./extensions/repo-operator.ts",
+      "./extensions/review.ts"
     ],
     "skills": [
       "./skills"
@@ -46,6 +54,11 @@
     "self-improve": "node scripts/open-pr.mjs",
     "bootstrap": "bash scripts/bootstrap-local.sh"
   },
+  "peerDependencies": {
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/r614/harness.git"
@@ -54,5 +67,5 @@
   "bugs": {
     "url": "https://github.com/r614/harness/issues"
   },
-  "license": "MIT"
+  "license": "Apache-2.0"
 }

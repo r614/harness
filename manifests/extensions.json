@@ -1,12 +1,24 @@
 {
   "extensions": [
     {
+      "name": "context-ui",
+      "manifest": "extensions/context.ts"
+    },
+    {
+      "name": "files-ui",
+      "manifest": "extensions/files.ts"
+    },
+    {
       "name": "context",
       "manifest": "extensions/context.json"
     },
     {
       "name": "repo-operator",
       "manifest": "extensions/repo-operator.json"
+    },
+    {
+      "name": "review-ui",
+      "manifest": "extensions/review.ts"
     }
   ]
 }

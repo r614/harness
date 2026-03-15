@@ -30,6 +30,11 @@ After installation, Pi can load:
 - prompt templates from `prompts/`
 - themes from `themes/`
 
+Imported Pi-native capabilities currently include:
+
+- `context`, `files`, and `review` extensions
+- `github`, `commit`, `summarize`, `native-web-search`, and `web-browser` skills
+
 ## Structure
 
 - `skills/`: human-readable capability packs with `SKILL.md`
@@ -41,6 +46,10 @@ After installation, Pi can load:
 - `fixtures/`: sample inputs for local tests
 - `manifests/`: explicit registries and policy boundaries
 - `intercepted-commands/`: wrappers for sensitive local commands
+
+## Attribution
+
+Some packaged skills and extensions are adapted or vendored from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff), which is licensed under Apache-2.0. See [NOTICE](/Users/roshan/Documents/New%20project/NOTICE) and [vendor/agent-stuff/LICENSE](/Users/roshan/Documents/New%20project/vendor/agent-stuff/LICENSE).
 
 ## Quick Start
 

@@ -1,0 +1,18 @@
+Harness includes adapted and vendored materials from mitsuhiko/agent-stuff
+https://github.com/mitsuhiko/agent-stuff
+
+Imported or adapted components currently include:
+
+- skills/github/SKILL.md
+- skills/commit/SKILL.md
+- skills/native-web-search/*
+- skills/summarize/*
+- skills/web-browser/*
+- extensions/context.ts
+- extensions/files.ts
+- extensions/review.ts
+
+Source repository license: Apache License 2.0
+Local copy: vendor/agent-stuff/LICENSE
+
+Modified files in this repository may differ from the original source over time.

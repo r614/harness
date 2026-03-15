@@ -1,8 +1,16 @@
 {
   "skills": [
     {
+      "name": "commit",
+      "path": "skills/commit/SKILL.md"
+    },
+    {
       "name": "github",
       "path": "skills/github/SKILL.md"
+    },
+    {
+      "name": "native-web-search",
+      "path": "skills/native-web-search/SKILL.md"
     },
     {
       "name": "browser",
@@ -11,6 +19,14 @@
     {
       "name": "gmail",
       "path": "skills/gmail/SKILL.md"
+    },
+    {
+      "name": "summarize",
+      "path": "skills/summarize/SKILL.md"
+    },
+    {
+      "name": "web-browser",
+      "path": "skills/web-browser/SKILL.md"
     },
     {
       "name": "repo-operator",
