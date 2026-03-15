@@ -35,6 +35,10 @@
     {
       "name": "repo-operator",
       "path": "skills/repo-operator/SKILL.md"
+    },
+    {
+      "name": "autoresearch-create",
+      "path": "skills/autoresearch-create/SKILL.md"
     }
   ]
 }

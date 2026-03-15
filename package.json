@@ -33,7 +33,8 @@
       "./extensions/repo-operator.ts",
       "./extensions/google-workspace.ts",
       "./extensions/browser-runtime.ts",
-      "./extensions/review.ts"
+      "./extensions/review.ts",
+      "./extensions/autoresearch.ts"
     ],
     "skills": [
       "./skills"
@@ -51,7 +52,8 @@
   "peerDependencies": {
     "@mariozechner/pi-ai": "*",
     "@mariozechner/pi-coding-agent": "*",
-    "@mariozechner/pi-tui": "*"
+    "@mariozechner/pi-tui": "*",
+    "@sinclair/typebox": "*"
   },
   "repository": {
     "type": "git",
