@@ -1,3 +1,8 @@
+---
+name: browser
+description: "Collect information from the web and prepare browser-based actions with approval before side effects."
+---
+
 # Browser
 
 Use this skill when Pi needs to collect information from the web or prepare browser-based actions.

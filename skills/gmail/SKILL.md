@@ -1,3 +1,8 @@
+---
+name: gmail
+description: "Search mail, read threads, draft replies, and require approval before sending email."
+---
+
 # Gmail
 
 Use this skill when Pi needs to search mail, read threads, prepare drafts, or send replies.
