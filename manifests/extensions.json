@@ -27,6 +27,10 @@
     {
       "name": "review-ui",
       "manifest": "extensions/review.ts"
+    },
+    {
+      "name": "autoresearch",
+      "manifest": "extensions/autoresearch.ts"
     }
   ]
 }

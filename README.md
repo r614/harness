@@ -216,6 +216,34 @@ npm run self-improve -- \
    - rollback guidance
 11. Wait for human review before merge.
 
+## Autoresearch workflow
+
+Harness includes an autoresearch extension and skill for iterative optimization loops with git-backed result logging and a live widget.
+
+Core pieces:
+
+- `/autoresearch <goal>` to enable or resume autoresearch mode
+- `/autoresearch dashboard` or `ctrl+shift+x` to open the fullscreen dashboard
+- `ctrl+x` to toggle the inline widget expansion
+- `init_experiment` to define the metric and direction
+- `run_experiment` to execute the benchmark command and optional `autoresearch.checks.sh`
+- `log_experiment` to append `autoresearch.jsonl` and auto-commit kept wins
+- `skills/autoresearch-create/SKILL.md` to scaffold `autoresearch.md` and `autoresearch.sh`
+
+Repo-local session files:
+
+- `autoresearch.md`
+- `autoresearch.sh`
+- `autoresearch.jsonl`
+- optional `autoresearch.checks.sh`
+- optional `autoresearch.ideas.md`
+
+Helpful commands and patterns:
+
+- `/autoresearch-ideas-prune foo,bar` to remove stale or already-tried backlog items
+- pass `idea` to `log_experiment` to append a promising deferred idea
+- pass `revertWorkingTree: true` to `log_experiment` on discard/crash/checks_failed to run `git checkout -- .`
+
 ## Executable eval coverage
 
 `npm run evals` now executes:
@@ -225,5 +253,6 @@ npm run self-improve -- \
 - `evals/browser-runtime/cases.json`
 - `evals/gmail/cases.json`
 - `evals/calendar/cases.json`
+- `evals/autoresearch/cases.json`
 
-These suites cover self-improvement policy enforcement, browser approval gating, persistent browser page-model gating, Gmail normalization/drafting/slop workflows, and approval-gated Calendar event handling.
+These suites cover self-improvement policy enforcement, browser approval gating, persistent browser page-model gating, Gmail normalization/drafting/slop workflows, approval-gated Calendar event handling, and autoresearch state/replay/git logging behavior.

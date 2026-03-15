@@ -250,6 +250,249 @@ async function runSuite(casesPath, runner) {
   return results;
 }
 
+async function runAutoresearchCase(testCase) {
+  const autoresearch = await import("./autoresearch.mjs");
+
+  if (testCase.runner === "reconstruct") {
+    const raw = await fs.readFile(path.join(ROOT, testCase.input), "utf8");
+    const state = autoresearch.reconstructStateFromJsonlContent(raw);
+    const actual = {
+      name: state.name,
+      metricName: state.metricName,
+      metricUnit: state.metricUnit,
+      bestDirection: state.bestDirection,
+      currentSegment: state.currentSegment,
+      resultCount: state.results.length,
+      baselineMetric: state.bestMetric,
+      secondaryMetrics: state.secondaryMetrics.map((metric) => metric.name)
+    };
+    assertExpectedSubset(actual, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "init") {
+    const cwd = await autoresearch.createTempGitRepo();
+    const input = await loadJson(testCase.input);
+    const state = await autoresearch.initExperiment(cwd, input);
+    const actual = {
+      name: state.name,
+      metricName: state.metricName,
+      metricUnit: state.metricUnit,
+      bestDirection: state.bestDirection,
+      currentSegment: state.currentSegment
+    };
+    assertExpectedSubset(actual, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "run") {
+    const cwd = await autoresearch.createTempGitRepo();
+    const pass = await autoresearch.runExperimentTask({ cwd, command: "printf 'hello from run\\n'" });
+    const fail = await autoresearch.runExperimentTask({ cwd, command: "printf 'boom\\n'; exit 7" });
+    assertExpectedSubset({
+      passContains: pass.tailOutput,
+      failExitCode: fail.exitCode,
+      failPassed: fail.passed
+    }, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "log-keep") {
+    const cwd = await autoresearch.createTempGitRepo();
+    await autoresearch.initExperiment(cwd, {
+      name: "Optimize tests",
+      metric_name: "seconds",
+      metric_unit: "s",
+      direction: "lower"
+    });
+    await fs.writeFile(path.join(cwd, "notes.txt"), "baseline\n");
+    const result = await autoresearch.logExperimentResult({
+      cwd,
+      state: await autoresearch.reconstructState(cwd),
+      params: {
+        commit: "working",
+        metric: 12.5,
+        status: "keep",
+        description: "baseline",
+        metrics: { heap_mb: 420 }
+      }
+    });
+    assertExpectedSubset({
+      status: result.experiment.status,
+      committed: result.committed,
+      resultCount: result.state.results.length,
+      metric: result.experiment.metric
+    }, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "checks-gate") {
+    const cwd = await autoresearch.createTempGitRepo();
+    await autoresearch.initExperiment(cwd, {
+      name: "Optimize tests",
+      metric_name: "seconds",
+      metric_unit: "s",
+      direction: "lower"
+    });
+    await fs.writeFile(path.join(cwd, "autoresearch.checks.sh"), "#!/bin/bash\nexit 3\n", { mode: 0o755 });
+    const run = await autoresearch.runExperimentTask({ cwd, command: "printf 'ok\\n'" });
+    let blocked = false;
+    try {
+      await autoresearch.logExperimentResult({
+        cwd,
+        state: await autoresearch.reconstructState(cwd),
+        params: {
+          commit: "working",
+          metric: 12.0,
+          status: "keep",
+          description: "should be blocked"
+        },
+        lastRunChecks: { pass: false, output: run.checksOutput, duration: run.checksDuration }
+      });
+    } catch {
+      blocked = true;
+    }
+    assertExpectedSubset({ checksPass: run.checksPass, blocked }, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "reinit") {
+    const cwd = await autoresearch.createTempGitRepo();
+    await autoresearch.initExperiment(cwd, {
+      name: "Optimize tests",
+      metric_name: "seconds",
+      metric_unit: "s",
+      direction: "lower"
+    });
+    await fs.writeFile(path.join(cwd, "notes.txt"), "first\n");
+    await autoresearch.logExperimentResult({
+      cwd,
+      state: await autoresearch.reconstructState(cwd),
+      params: {
+        commit: "working",
+        metric: 12.5,
+        status: "keep",
+        description: "baseline",
+        metrics: { heap_mb: 420 }
+      }
+    });
+    await autoresearch.initExperiment(cwd, {
+      name: "Optimize tests v2",
+      metric_name: "seconds",
+      metric_unit: "s",
+      direction: "lower"
+    });
+    await fs.writeFile(path.join(cwd, "notes.txt"), "second\n");
+    const result = await autoresearch.logExperimentResult({
+      cwd,
+      state: await autoresearch.reconstructState(cwd),
+      params: {
+        commit: "working",
+        metric: 8.5,
+        status: "keep",
+        description: "new baseline",
+        metrics: { heap_mb: 410 },
+        force: true
+      }
+    });
+    assertExpectedSubset({
+      currentSegment: result.state.currentSegment,
+      resultCount: result.state.results.filter((entry) => entry.segment === result.state.currentSegment).length,
+      baselineMetric: result.state.bestMetric
+    }, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "resume-decision") {
+    const ok = autoresearch.shouldAutoResume({
+      autoresearchMode: true,
+      experimentsThisSession: 2,
+      now: 100000,
+      lastAutoResumeTime: 0,
+      autoResumeTurns: 0
+    });
+    const rateLimited = autoresearch.shouldAutoResume({
+      autoresearchMode: true,
+      experimentsThisSession: 2,
+      now: 100000,
+      lastAutoResumeTime: 99900,
+      autoResumeTurns: 0
+    });
+    const turnLimit = autoresearch.shouldAutoResume({
+      autoresearchMode: true,
+      experimentsThisSession: 2,
+      now: 100000,
+      lastAutoResumeTime: 0,
+      autoResumeTurns: 20
+    });
+    assertExpectedSubset({
+      ok: ok.resume,
+      rateLimited: rateLimited.resume,
+      rateLimitedReason: rateLimited.reason,
+      turnLimit: turnLimit.resume,
+      turnLimitReason: turnLimit.reason
+    }, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "resume-message") {
+    const withIdeas = autoresearch.buildResumeMessage({ hasIdeas: true });
+    const withoutIdeas = autoresearch.buildResumeMessage({ hasIdeas: false });
+    assertExpectedSubset({
+      withIdeasIncludes: withIdeas.includes(testCase.expect.withIdeasIncludes),
+      withoutIdeasIncludes: withoutIdeas.includes(testCase.expect.withoutIdeasIncludes)
+    }, {
+      withIdeasIncludes: true,
+      withoutIdeasIncludes: true
+    });
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "ideas-prune") {
+    const raw = await fs.readFile(path.join(ROOT, testCase.input), "utf8");
+    const pruned = autoresearch.pruneIdeasContent(raw, ["batching file reads"]);
+    assertExpectedSubset({
+      remaining: pruned.trim().split(/\r?\n/).filter(Boolean).length,
+      contains: pruned.includes(testCase.expect.contains)
+    }, {
+      remaining: testCase.expect.remaining,
+      contains: true
+    });
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "append-idea") {
+    const cwd = await autoresearch.createTempGitRepo();
+    const result = await autoresearch.appendIdea(cwd, "Move serialization off the hot path");
+    const content = await fs.readFile(path.join(cwd, "autoresearch.ideas.md"), "utf8");
+    assertExpectedSubset({
+      updated: result.updated,
+      contains: content.includes(testCase.expect.contains)
+    }, {
+      updated: testCase.expect.updated,
+      contains: true
+    });
+    return { name: testCase.name, status: "pass" };
+  }
+
+  if (testCase.runner === "revert") {
+    const cwd = await autoresearch.createTempGitRepo();
+    await fs.writeFile(path.join(cwd, "README.md"), "# dirty\n");
+    const reverted = await autoresearch.revertExperimentChanges(cwd);
+    const { execFile } = await import("node:child_process");
+    const clean = await new Promise((resolve) => {
+      execFile("git", ["status", "--porcelain"], { cwd }, (error, stdout) => {
+        if (error) return resolve(false);
+        resolve(String(stdout).trim().length === 0);
+      });
+    });
+    assertExpectedSubset({ reverted: reverted.reverted, clean }, testCase.expect);
+    return { name: testCase.name, status: "pass" };
+  }
+
+  throw new Error(`Unsupported autoresearch case: ${testCase.name}`);
+}
+
 async function main() {
   console.log("Harness evals");
 
@@ -261,7 +504,8 @@ async function main() {
     browser: await runSuite("evals/browser/cases.json", runBrowserCase),
     "browser-runtime": await runSuite("evals/browser-runtime/cases.json", runBrowserRuntimeCase),
     gmail: await runSuite("evals/gmail/cases.json", runWorkspaceCase),
-    calendar: await runSuite("evals/calendar/cases.json", runWorkspaceCase)
+    calendar: await runSuite("evals/calendar/cases.json", runWorkspaceCase),
+    autoresearch: await runSuite("evals/autoresearch/cases.json", runAutoresearchCase)
   };
 
   let failures = 0;
