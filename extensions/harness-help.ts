@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import answerExtension from "./answer.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -9,6 +10,8 @@ async function readText(relativePath: string) {
 }
 
 export default function (pi: any) {
+  answerExtension(pi);
+
   pi.registerCommand("harness-help", {
     description: "Show the installed Harness package resources and production-usable entry points.",
     handler: async () => {
@@ -20,6 +23,7 @@ export default function (pi: any) {
         "- gmail-workspace: Gmail search/read/draft/slop-triage workflows through local gws",
         "- calendar-workspace: Calendar list/draft/apply workflows through local gws",
         "- browser-runtime: persistent local Chrome-backed browser sessions with structured actions",
+        "- answer: interactive extraction of unanswered questions from the last assistant message",
         "",
         "Requires local setup:",
         "- install and authenticate the Google Workspace CLI (`gws`) for Gmail/Calendar commands",
