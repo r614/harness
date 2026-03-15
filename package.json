@@ -1,13 +1,58 @@
 {
   "name": "harness",
   "version": "0.1.0",
-  "private": true,
   "description": "Portable skills and extensions repo for a Pi-style agent",
   "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "agent",
+    "skills",
+    "extensions"
+  ],
+  "files": [
+    "AGENTS.md",
+    "README.md",
+    "extensions/",
+    "skills/",
+    "prompts/",
+    "themes/",
+    "commands/",
+    "fixtures/",
+    "manifests/",
+    "scripts/"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/harness-help.ts",
+      "./extensions/repo-operator.ts"
+    ],
+    "skills": [
+      "./skills"
+    ],
+    "prompts": [
+      "./prompts"
+    ],
+    "promptTemplates": [
+      "./prompts"
+    ],
+    "themes": [
+      "./themes/harness.json"
+    ]
+  },
   "scripts": {
     "validate": "node scripts/validate-manifests.mjs",
     "evals": "node scripts/run-evals.mjs",
     "self-improve": "node scripts/open-pr.mjs",
     "bootstrap": "bash scripts/bootstrap-local.sh"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r614/harness.git"
+  },
+  "homepage": "https://github.com/r614/harness",
+  "bugs": {
+    "url": "https://github.com/r614/harness/issues"
+  },
+  "license": "MIT"
 }

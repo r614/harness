@@ -9,11 +9,33 @@ The repo is designed to be:
 - safe to evolve through tests and PRs
 - local-first for setup, with optional Railway/GitHub automation
 
+## Use With Pi
+
+Test it directly from git without installing:
+
+```bash
+pi -e git:github.com/r614/harness
+```
+
+Install it as a Pi package:
+
+```bash
+pi install git:github.com/r614/harness
+```
+
+After installation, Pi can load:
+
+- package extensions from `extensions/`
+- skills from `skills/`
+- prompt templates from `prompts/`
+- themes from `themes/`
+
 ## Structure
 
 - `skills/`: human-readable capability packs with `SKILL.md`
 - `extensions/`: runtime extensions loaded by the agent
 - `commands/`: reusable workflow prompts and operating procedures
+- `prompts/`: slash-command prompt templates for Pi
 - `scripts/`: bootstrap, eval, validation, and PR helper scripts
 - `evals/`: regression fixtures and expected outcomes
 - `fixtures/`: sample inputs for local tests
