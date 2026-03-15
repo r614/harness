@@ -8,6 +8,8 @@ license: Stolen from Mario
 
 Minimal CDP tools for collaborative site exploration.
 
+> Harness note: this is imported advanced guidance. It is not part of the fixture-backed production workflow in this repo unless your Pi runtime already provides the required browser automation support.
+
 ## Start Chrome
 
 ```bash

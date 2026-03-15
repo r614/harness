@@ -1,0 +1,38 @@
+{
+  "title": "Example Domain",
+  "url": "https://example.com/",
+  "textExcerpt": "Example Domain This domain is for use in illustrative examples in documents.",
+  "actionable": [
+    {
+      "ref": "t1",
+      "selector": "a",
+      "tag": "a",
+      "role": "link",
+      "text": "More information...",
+      "ariaLabel": "",
+      "placeholder": "",
+      "href": "https://www.iana.org/domains/example",
+      "type": "",
+      "risk": "read_only"
+    },
+    {
+      "ref": "t2",
+      "selector": "form > button:nth-of-type(1)",
+      "tag": "button",
+      "role": "button",
+      "text": "Submit",
+      "ariaLabel": "",
+      "placeholder": "",
+      "href": "",
+      "type": "submit",
+      "risk": "side_effect"
+    }
+  ],
+  "forms": [
+    {
+      "index": 0,
+      "action": "/submit",
+      "method": "post"
+    }
+  ]
+}

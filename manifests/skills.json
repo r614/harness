@@ -21,6 +21,10 @@
       "path": "skills/gmail/SKILL.md"
     },
     {
+      "name": "calendar",
+      "path": "skills/calendar/SKILL.md"
+    },
+    {
       "name": "summarize",
       "path": "skills/summarize/SKILL.md"
     },

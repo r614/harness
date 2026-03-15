@@ -1,0 +1,14 @@
+{
+  "title": "Make repo-operator produce a structured PR summary",
+  "problem": "The existing self-improvement path does not validate changed files or return a complete PR-ready summary.",
+  "files": [
+    "extensions/repo-operator.mjs",
+    "evals/self-improvement/README.md",
+    "fixtures/repos/self-improvement-valid.json"
+  ],
+  "evidence": [
+    "npm run validate",
+    "npm run evals"
+  ],
+  "rollback": "Revert the repo-operator workflow change if summary generation regresses."
+}

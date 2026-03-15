@@ -3,10 +3,10 @@
     "allowedPaths": [
       "skills/",
       "extensions/",
-      "commands/",
       "evals/",
       "fixtures/",
       "manifests/",
+      "scripts/",
       "README.md"
     ],
     "requiredChecks": [

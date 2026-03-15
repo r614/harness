@@ -12,10 +12,10 @@ Harness is the trusted toolbox repo for the personal agent runtime.
 
 - `skills/`
 - `extensions/`
-- `commands/`
 - `evals/`
 - `fixtures/`
 - `manifests/`
+- `scripts/`
 - `README.md`
 
 ## Disallowed Targets

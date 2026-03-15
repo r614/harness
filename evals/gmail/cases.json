@@ -1,0 +1,85 @@
+[
+  {
+    "name": "gmail-search-normalizes-threads",
+    "kind": "gmail.search",
+    "input": {
+      "query": "newer_than:7d"
+    },
+    "fixtures": {
+      "gmail:searchThreads": "fixtures/gws/gmail-search.json"
+    },
+    "expect": {
+      "action": "gmail.search_threads",
+      "threadCount": 2,
+      "firstThreadId": "thread-human-1"
+    }
+  },
+  {
+    "name": "gmail-draft-reply-creates-draft",
+    "kind": "gmail.draftReply",
+    "input": {
+      "threadId": "thread-human-1",
+      "body": "Thanks — I will send the draft by Friday."
+    },
+    "fixtures": {
+      "gmail:getThread": "fixtures/gws/gmail-thread-human.json",
+      "gmail:createDraftReply": "fixtures/gws/gmail-draft-reply-result.json"
+    },
+    "expect": {
+      "action": "gmail.draft_reply",
+      "approvalRequiredToSend": true,
+      "draftResultStatus": "draft_created"
+    }
+  },
+  {
+    "name": "gmail-slop-classification-and-auto-archive",
+    "kind": "gmail.archive",
+    "input": {
+      "threadId": "thread-news-1",
+      "allowAutomatedArchive": true
+    },
+    "fixtures": {
+      "gmail:getThread": "fixtures/gws/gmail-thread-newsletter.json",
+      "gmail:archiveThread": "fixtures/gws/gmail-archive-result.json"
+    },
+    "expect": {
+      "action": "gmail.archive_thread",
+      "executed": true,
+      "archiveStatus": "archived",
+      "classificationIsLowValue": true
+    }
+  },
+  {
+    "name": "gmail-low-value-archive-without-opt-in-still-needs-approval",
+    "kind": "gmail.archive",
+    "input": {
+      "threadId": "thread-news-1",
+      "allowAutomatedArchive": false
+    },
+    "fixtures": {
+      "gmail:getThread": "fixtures/gws/gmail-thread-newsletter.json"
+    },
+    "expect": {
+      "action": "gmail.archive_thread",
+      "executed": false,
+      "approvalRequired": true,
+      "classificationIsLowValue": true
+    }
+  },
+  {
+    "name": "gmail-unsubscribe-preparation-requires-approval",
+    "kind": "gmail.prepareUnsubscribe",
+    "input": {
+      "threadId": "thread-news-1"
+    },
+    "fixtures": {
+      "gmail:getThread": "fixtures/gws/gmail-thread-newsletter.json"
+    },
+    "expect": {
+      "action": "gmail.prepare_unsubscribe",
+      "approvalRequired": true,
+      "unsubscribeMethod": "open_url",
+      "unsubscribeUrl": "https://example.com/unsub"
+    }
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "id": "thread-news-1",
+  "subject": "50% off this week only",
+  "snippet": "Unsubscribe from future promo emails",
+  "labelIds": ["INBOX", "CATEGORY_PROMOTIONS"],
+  "messages": [
+    {
+      "id": "msg-2",
+      "from": "promos@example.com",
+      "subject": "50% off this week only",
+      "snippet": "Unsubscribe from future promo emails",
+      "body": "Big sale this week only",
+      "headers": {
+        "list-id": "promo.example.com",
+        "list-unsubscribe": "<https://example.com/unsub>",
+        "date": "2026-03-14T08:00:00Z"
+      }
+    }
+  ]
+}

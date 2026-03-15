@@ -1,7 +1,11 @@
 {
-  "title": "Tighten browser extension approval copy",
-  "problem": "Users are confused about when submit actions require approval.",
+  "title": "Tighten repo self-improvement workflow output",
+  "problem": "Pi can draft a PR payload, but the current workflow is too vague about changed files, evidence, and rollback guidance.",
   "evidence": [
-    "eval:self-improvement:approval-copy"
+    "eval:self-improvement:structured-summary"
+  ],
+  "files": [
+    "extensions/repo-operator.mjs",
+    "skills/repo-operator/SKILL.md"
   ]
 }

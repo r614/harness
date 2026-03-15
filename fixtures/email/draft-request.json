@@ -1,0 +1,9 @@
+{
+  "threadId": "sample-thread-1",
+  "replyInstruction": "Send a short reply confirming a draft will be shared by Friday.",
+  "requiresApproval": true,
+  "expectedDraftIncludes": [
+    "Friday",
+    "draft"
+  ]
+}

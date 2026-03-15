@@ -1,14 +1,32 @@
 ---
 name: gmail
-description: "Search mail, read threads, draft replies, and require approval before sending email."
+description: "Search mail, read threads, draft replies, classify low-value mail, and require approval before send or unsubscribe actions."
 ---
 
 # Gmail
 
-Use this skill when Pi needs to search mail, read threads, prepare drafts, or send replies.
+Use this skill for Google Workspace Gmail workflows backed by the local `gws` CLI.
 
-## Rules
+## Supported tasks
 
-- sync and read are low-risk actions
-- draft generation should cite source threads
-- sending always requires explicit approval
+- search threads
+- read and summarize threads
+- draft reply emails
+- classify likely low-value/slop mail
+- archive explicit low-value mail
+- prepare unsubscribe workflows
+
+## Approval boundary
+
+- reading, searching, summarizing, drafting, and bounded auto-archive are allowed
+- sending replies requires explicit approval
+- unsubscribe actions require explicit approval
+
+## Expected task kinds
+
+- `gmail.search`
+- `gmail.read`
+- `gmail.draftReply`
+- `gmail.classifySlop`
+- `gmail.archive`
+- `gmail.prepareUnsubscribe`

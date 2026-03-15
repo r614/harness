@@ -19,9 +19,7 @@
     "README.md",
     "extensions/",
     "skills/",
-    "prompts/",
     "themes/",
-    "commands/",
     "fixtures/",
     "manifests/",
     "scripts/",
@@ -33,16 +31,12 @@
       "./extensions/files.ts",
       "./extensions/harness-help.ts",
       "./extensions/repo-operator.ts",
+      "./extensions/google-workspace.ts",
+      "./extensions/browser-runtime.ts",
       "./extensions/review.ts"
     ],
     "skills": [
       "./skills"
-    ],
-    "prompts": [
-      "./prompts"
-    ],
-    "promptTemplates": [
-      "./prompts"
     ],
     "themes": [
       "./themes/harness.json"

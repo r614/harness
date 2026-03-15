@@ -1,0 +1,95 @@
+{
+  "binary": "gws",
+  "gmail": {
+    "searchThreads": {
+      "argv": ["gmail", "users", "threads", "list"],
+      "params": {
+        "userId": "me",
+        "q": "{query}",
+        "maxResults": "{maxResults}"
+      }
+    },
+    "getThread": {
+      "argv": ["gmail", "users", "threads", "get"],
+      "params": {
+        "userId": "me",
+        "id": "{threadId}",
+        "format": "full"
+      }
+    },
+    "createDraftReply": {
+      "argv": ["gmail", "users", "drafts", "create"],
+      "params": {
+        "userId": "me"
+      },
+      "json": {
+        "message": {
+          "threadId": "{threadId}",
+          "raw": "{rawMessage}"
+        }
+      }
+    },
+    "archiveThread": {
+      "argv": ["gmail", "users", "threads", "modify"],
+      "params": {
+        "userId": "me",
+        "id": "{threadId}"
+      },
+      "json": {
+        "removeLabelIds": ["INBOX"]
+      }
+    }
+  },
+  "calendar": {
+    "listEvents": {
+      "argv": ["calendar", "events", "list"],
+      "params": {
+        "calendarId": "primary",
+        "timeMin": "{timeMin}",
+        "timeMax": "{timeMax}",
+        "maxResults": "{maxResults}",
+        "singleEvents": true,
+        "orderBy": "startTime"
+      }
+    },
+    "createEvent": {
+      "argv": ["calendar", "events", "insert"],
+      "params": {
+        "calendarId": "primary",
+        "sendUpdates": "none"
+      },
+      "json": {
+        "summary": "{summary}",
+        "start": {
+          "dateTime": "{start}"
+        },
+        "end": {
+          "dateTime": "{end}"
+        },
+        "location": "{location}",
+        "description": "{description}",
+        "attendees": "{attendeesObjects}"
+      }
+    },
+    "updateEvent": {
+      "argv": ["calendar", "events", "patch"],
+      "params": {
+        "calendarId": "primary",
+        "eventId": "{eventId}",
+        "sendUpdates": "none"
+      },
+      "json": {
+        "summary": "{summary}",
+        "start": {
+          "dateTime": "{start}"
+        },
+        "end": {
+          "dateTime": "{end}"
+        },
+        "location": "{location}",
+        "description": "{description}",
+        "attendees": "{attendeesObjects}"
+      }
+    }
+  }
+}
