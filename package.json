@@ -16,8 +16,7 @@
     "README.md",
     "extensions/",
     "skills/",
-    "themes/",
-    "scripts/"
+    "themes/"
   ],
   "pi": {
     "extensions": [
@@ -29,9 +28,6 @@
     "themes": [
       "./themes"
     ]
-  },
-  "scripts": {
-    "bootstrap": "bash scripts/bootstrap-local.sh"
   },
   "peerDependencies": {
     "@mariozechner/pi-ai": "*",

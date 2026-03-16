@@ -21,6 +21,5 @@ Harness is a filesystem-first Pi package repo for reusable agent capabilities.
 - `extensions/`
 - `skills/`
 - `themes/`
-- `scripts/`
 - `README.md`
 - `AGENTS.md`

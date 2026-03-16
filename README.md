@@ -6,7 +6,6 @@ It packages:
 - `extensions/`
 - `skills/`
 - `themes/`
-- extension-local helper scripts plus a small shared `scripts/` directory
 
 ## Use with Pi
 
