@@ -1751,12 +1751,13 @@ export default function todosExtension(pi: ExtensionAPI) {
 				return new Text(text, 0, 0);
 			}
 
-			if (!details.todo) {
+			const todoDetails = (details as Extract<TodoToolDetails, { todo: TodoRecord }>).todo;
+			if (!todoDetails) {
 				const text = result.content[0];
 				return new Text(text?.type === "text" ? text.text : "", 0, 0);
 			}
 
-			let text = renderTodoDetail(theme, details.todo, expanded);
+			let text = renderTodoDetail(theme, todoDetails, expanded);
 			const actionLabel =
 				details.action === "create"
 					? "Created"

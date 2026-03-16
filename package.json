@@ -35,7 +35,9 @@
     "@mariozechner/pi-tui": "*",
     "@sinclair/typebox": "*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/r614/harness.git"

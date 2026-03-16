@@ -15,6 +15,7 @@ Harness is a filesystem-first Pi package repo for reusable agent capabilities.
 2. Prefer keeping helper code close to the owning extension or skill.
 3. Do not introduce new top-level manifest or fixture registries unless absolutely necessary.
 4. Never auto-merge; human review is required.
+5. Do not use `as any`; fix types at the boundary or model the shape explicitly.
 
 ## Preferred change targets
 

@@ -1,4 +1,4 @@
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { truncateTail } from "@mariozechner/pi-coding-agent";
 import { StringEnum } from "@mariozechner/pi-ai";
 import { Text, matchesKey } from "@mariozechner/pi-tui";
@@ -252,11 +252,18 @@ export default function autoresearchExtension(pi: ExtensionAPI) {
     });
   }
 
-  for (const eventName of ["session_start", "session_switch", "session_fork", "session_tree"] as const) {
-    pi.on(eventName, async (_event: any, ctx: ExtensionContext) => {
-      await refreshState(ctx);
-    });
-  }
+  pi.on("session_start", async (_event: any, ctx: ExtensionContext) => {
+    await refreshState(ctx);
+  });
+  pi.on("session_switch", async (_event: any, ctx: ExtensionContext) => {
+    await refreshState(ctx);
+  });
+  pi.on("session_fork", async (_event: any, ctx: ExtensionContext) => {
+    await refreshState(ctx);
+  });
+  pi.on("session_tree", async (_event: any, ctx: ExtensionContext) => {
+    await refreshState(ctx);
+  });
 
   pi.on("agent_start", async () => {
     experimentsThisSession = 0;
@@ -383,7 +390,13 @@ export default function autoresearchExtension(pi: ExtensionAPI) {
       "For discard/crash/checks_failed, pass revertWorkingTree: true when you want the tool to reset local changes before the next attempt."
     ],
     parameters: LogParams,
-    async execute(_id: string, params: any, _signal: AbortSignal, _onUpdate: any, ctx: ExtensionContext) {
+    async execute(
+      _id: string,
+      params: any,
+      _signal: AbortSignal,
+      _onUpdate: any,
+      ctx: ExtensionContext,
+    ): Promise<{ content: { type: "text"; text: string }[]; details: { experiment?: any; state?: any } }> {
       try {
         const result = await logExperimentResult({
           cwd: ctx.cwd,
@@ -446,39 +459,44 @@ export default function autoresearchExtension(pi: ExtensionAPI) {
 
   pi.registerCommand("autoresearch-ideas-prune", {
     description: "Prune stale or tried ideas from autoresearch.ideas.md.",
-    handler: async (args: string, ctx: any) => {
+    handler: async (args: string, ctx: ExtensionCommandContext) => {
       const tried = String(args || "")
         .split(",")
         .map((item) => item.trim())
         .filter(Boolean);
       const result = await pruneIdeasFile(ctx.cwd, tried);
-      if (result.deleted) return "Pruned all ideas and removed autoresearch.ideas.md";
-      return `Ideas pruned: remaining ${result.remaining}`;
+      ctx.ui.notify(
+        result.deleted ? "Pruned all ideas and removed autoresearch.ideas.md" : `Ideas pruned: remaining ${result.remaining}`,
+        "info",
+      );
     }
   });
 
   pi.registerCommand("autoresearch", {
     description: "Start, stop, clear, or resume autoresearch mode.",
-    handler: async (args: string, ctx: any) => {
+    handler: async (args: string, ctx: ExtensionCommandContext) => {
       const command = String(args || "").trim();
       if (!command) {
-        return [
-          "Usage: /autoresearch [off|clear|dashboard|<goal>]",
-          "",
-          "<goal> turns autoresearch mode on and asks the agent to start or resume the loop.",
-          "dashboard opens the fullscreen dashboard.",
-          "off turns autoresearch mode off.",
-          "clear deletes autoresearch.jsonl and turns the mode off."
-        ].join("\n");
+        ctx.ui.notify(
+          [
+            "Usage: /autoresearch [off|clear|dashboard|<goal>]",
+            "<goal> turns autoresearch mode on and asks the agent to start or resume the loop.",
+            "dashboard opens the fullscreen dashboard.",
+            "off turns autoresearch mode off.",
+            "clear deletes autoresearch.jsonl and turns the mode off."
+          ].join("\n"),
+          "info",
+        );
+        return;
       }
       if (command === "dashboard") {
         await showFullscreenDashboard(ctx);
-        return "Opened autoresearch dashboard";
+        return;
       }
       if (command === "off") {
         autoresearchMode = false;
         ctx.ui.notify?.("Autoresearch mode OFF", "info");
-        return "Autoresearch mode OFF";
+        return;
       }
       if (command === "clear") {
         const jsonlPath = path.join(ctx.cwd, "autoresearch.jsonl");
@@ -486,12 +504,12 @@ export default function autoresearchExtension(pi: ExtensionAPI) {
         state = defaultState();
         autoresearchMode = false;
         updateWidget(ctx);
-        return "Deleted autoresearch.jsonl and turned autoresearch mode OFF";
+        ctx.ui.notify?.("Deleted autoresearch.jsonl and turned autoresearch mode OFF", "info");
+        return;
       }
       autoresearchMode = true;
       ctx.ui.notify?.("Autoresearch mode ON", "info");
       pi.sendUserMessage(`Autoresearch mode active. ${command}. Read autoresearch.md, check autoresearch.ideas.md if present, and continue the experiment loop.`);
-      return `Autoresearch mode ON: ${command}`;
     }
   });
 }
