@@ -1,5 +1,0 @@
-{"type":"config","name":"Optimize tests","metricName":"seconds","metricUnit":"s","bestDirection":"lower"}
-{"run":1,"commit":"abc1234","metric":12.5,"metrics":{"heap_mb":420},"status":"keep","description":"baseline","timestamp":1700000000000}
-{"run":2,"commit":"def5678","metric":10.2,"metrics":{"heap_mb":430},"status":"keep","description":"parallelize setup","timestamp":1700000001000}
-{"type":"config","name":"Optimize tests v2","metricName":"seconds","metricUnit":"s","bestDirection":"lower"}
-{"run":3,"commit":"9999999","metric":9.8,"metrics":{"heap_mb":410},"status":"keep","description":"new baseline","timestamp":1700000002000}

@@ -1,7 +1,7 @@
 {
   "name": "harness",
   "version": "0.1.0",
-  "description": "Portable skills and extensions repo for a Pi-style agent",
+  "description": "Filesystem-first Pi package with extensions, skills, and themes",
   "type": "module",
   "keywords": [
     "pi-package",
@@ -9,44 +9,31 @@
     "agent",
     "skills",
     "extensions",
-    "pi-extension",
-    "pi-skill",
-    "pi-theme"
+    "themes"
   ],
   "files": [
     "AGENTS.md",
-    "NOTICE",
     "README.md",
     "extensions/",
     "skills/",
     "themes/",
-    "fixtures/",
-    "manifests/",
     "scripts/",
-    "vendor/"
+    "tests/"
   ],
   "pi": {
     "extensions": [
-      "./extensions/context.ts",
-      "./extensions/files.ts",
-      "./extensions/harness-help.ts",
-      "./extensions/repo-operator.ts",
-      "./extensions/google-workspace.ts",
-      "./extensions/browser-runtime.ts",
-      "./extensions/review.ts",
-      "./extensions/autoresearch.ts"
+      "./extensions"
     ],
     "skills": [
       "./skills"
     ],
     "themes": [
-      "./themes/harness.json"
+      "./themes"
     ]
   },
   "scripts": {
-    "validate": "node scripts/validate-manifests.mjs",
-    "evals": "node scripts/run-evals.mjs",
-    "self-improve": "node scripts/open-pr.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "bootstrap": "bash scripts/bootstrap-local.sh"
   },
   "peerDependencies": {
@@ -54,6 +41,9 @@
     "@mariozechner/pi-coding-agent": "*",
     "@mariozechner/pi-tui": "*",
     "@sinclair/typebox": "*"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   },
   "repository": {
     "type": "git",

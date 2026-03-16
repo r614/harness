@@ -1,2 +1,0 @@
-- Reuse compiled regex objects across runs
-- Avoid repeated JSON serialization on the hot path

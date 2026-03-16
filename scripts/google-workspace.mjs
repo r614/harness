@@ -1,28 +1,109 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import { execFile } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import path from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DEFAULT_MANIFEST_PATH = path.join(ROOT, "manifests", "google-workspace.json");
 
-async function readJson(filePath) {
-  const raw = await fs.readFile(filePath, "utf8");
-  return JSON.parse(raw);
-}
-
-async function readManifest(manifestPath = DEFAULT_MANIFEST_PATH) {
-  return readJson(manifestPath);
-}
+export const GOOGLE_WORKSPACE_CONFIG = {
+  binary: "gws",
+  gmail: {
+    searchThreads: {
+      argv: ["gmail", "users", "threads", "list"],
+      params: {
+        userId: "me",
+        q: "{query}",
+        maxResults: "{maxResults}"
+      }
+    },
+    getThread: {
+      argv: ["gmail", "users", "threads", "get"],
+      params: {
+        userId: "me",
+        id: "{threadId}",
+        format: "full"
+      }
+    },
+    createDraftReply: {
+      argv: ["gmail", "users", "drafts", "create"],
+      params: {
+        userId: "me"
+      },
+      json: {
+        message: {
+          threadId: "{threadId}",
+          raw: "{rawMessage}"
+        }
+      }
+    },
+    archiveThread: {
+      argv: ["gmail", "users", "threads", "modify"],
+      params: {
+        userId: "me",
+        id: "{threadId}"
+      },
+      json: {
+        removeLabelIds: ["INBOX"]
+      }
+    }
+  },
+  calendar: {
+    listEvents: {
+      argv: ["calendar", "events", "list"],
+      params: {
+        calendarId: "primary",
+        timeMin: "{timeMin}",
+        timeMax: "{timeMax}",
+        maxResults: "{maxResults}",
+        singleEvents: true,
+        orderBy: "startTime"
+      }
+    },
+    createEvent: {
+      argv: ["calendar", "events", "insert"],
+      params: {
+        calendarId: "primary",
+        sendUpdates: "none"
+      },
+      json: {
+        summary: "{summary}",
+        start: {
+          dateTime: "{start}"
+        },
+        end: {
+          dateTime: "{end}"
+        },
+        location: "{location}",
+        description: "{description}",
+        attendees: "{attendeesObjects}"
+      }
+    },
+    updateEvent: {
+      argv: ["calendar", "events", "patch"],
+      params: {
+        calendarId: "primary",
+        eventId: "{eventId}",
+        sendUpdates: "none"
+      },
+      json: {
+        summary: "{summary}",
+        start: {
+          dateTime: "{start}"
+        },
+        end: {
+          dateTime: "{end}"
+        },
+        location: "{location}",
+        description: "{description}",
+        attendees: "{attendeesObjects}"
+      }
+    }
+  }
+};
 
 function toArray(value) {
   return Array.isArray(value) ? value : [];
-}
-
-function isPlaceholder(value) {
-  return typeof value === "string" && /^\{.+\}$/.test(value);
 }
 
 function substituteValue(template, values) {
@@ -34,10 +115,9 @@ function substituteValue(template, values) {
   }
 
   if (Array.isArray(template)) {
-    const result = template
+    return template
       .map((item) => substituteValue(item, values))
       .filter((item) => item !== undefined && item !== null && item !== "");
-    return result;
   }
 
   if (template && typeof template === "object") {
@@ -229,7 +309,7 @@ function buildAttendeeObjects(attendees) {
 }
 
 async function runConfiguredCommand(operation, values = {}, runtime = {}) {
-  const manifest = runtime.manifest || (await readManifest(runtime.manifestPath));
+  const config = runtime.config || GOOGLE_WORKSPACE_CONFIG;
   if (runtime.transport === "fixture") {
     const fixture = runtime.fixtures?.[operation];
     if (fixture === undefined) throw new Error(`Missing fixture for operation ${operation}`);
@@ -237,10 +317,10 @@ async function runConfiguredCommand(operation, values = {}, runtime = {}) {
   }
 
   const [scope, action] = operation.split(":");
-  const entry = manifest?.[scope]?.[action];
-  if (!entry) throw new Error(`No gws manifest entry for ${operation}`);
+  const entry = config?.[scope]?.[action];
+  if (!entry) throw new Error(`No gws config entry for ${operation}`);
 
-  const binary = runtime.binary || process.env.GWS_BIN || manifest.binary || "gws";
+  const binary = runtime.binary || process.env.GWS_BIN || config.binary || "gws";
   const argv = [...entry.argv];
   const params = substituteValue(entry.params || {}, values);
   const json = substituteValue(entry.json || {}, values);

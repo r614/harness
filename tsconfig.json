@@ -5,9 +5,13 @@
     "moduleResolution": "Bundler",
     "strict": false,
     "allowJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": [
+      "vitest/globals"
+    ]
   },
   "include": [
-    "extensions/**/*.ts"
+    "extensions/**/*.ts",
+    "tests/**/*.ts"
   ]
 }
