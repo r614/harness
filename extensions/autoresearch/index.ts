@@ -19,7 +19,7 @@ import {
   revertExperimentChanges,
   runExperimentTask,
   shouldAutoResume
-} from "../scripts/autoresearch.mjs";
+} from "./autoresearch/scripts/autoresearch.mjs";
 
 const InitParams = Type.Object({
   name: Type.String({ description: "Human-readable experiment name." }),

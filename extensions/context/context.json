@@ -7,7 +7,7 @@
     "write_memory",
     "summarize_history"
   ],
-  "entrypoint": "./context.mjs",
+  "entrypoint": "./index.mjs",
   "requiredSecrets": [],
   "configSchema": {
     "type": "object",

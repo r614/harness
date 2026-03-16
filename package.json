@@ -17,8 +17,7 @@
     "extensions/",
     "skills/",
     "themes/",
-    "scripts/",
-    "tests/"
+    "scripts/"
   ],
   "pi": {
     "extensions": [
@@ -32,8 +31,6 @@
     ]
   },
   "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest",
     "bootstrap": "bash scripts/bootstrap-local.sh"
   },
   "peerDependencies": {
@@ -42,9 +39,7 @@
     "@mariozechner/pi-tui": "*",
     "@sinclair/typebox": "*"
   },
-  "devDependencies": {
-    "vitest": "^3.2.4"
-  },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/r614/harness.git"
