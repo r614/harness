@@ -1,32 +1,29 @@
 # Harness Agents Guide
 
-Harness is the trusted toolbox repo for the personal agent runtime.
+Harness is a filesystem-first Pi package repo for reusable agent capabilities.
 
-## Goals
+## Repo layout
 
-- keep agent capabilities as source-controlled assets
-- make improvements inspectable
-- require tests and human review before merge
+- `extensions/` — Pi extensions
+- `skills/` — skill directories with `SKILL.md`
+- `themes/` — JSON themes
+- `scripts/` — shared helper and runtime scripts
+- `tests/` — standard test suite
 
-## Allowed Self-Improvement Targets
+## Working rules
 
-- `skills/`
+1. Keep changes narrow and capability-local.
+2. Prefer keeping helper code close to the owning extension or skill.
+3. Do not introduce new top-level manifest or fixture registries unless absolutely necessary.
+4. Run `npm test` before proposing changes.
+5. Never auto-merge; human review is required.
+
+## Preferred change targets
+
 - `extensions/`
-- `evals/`
-- `fixtures/`
-- `manifests/`
+- `skills/`
+- `themes/`
 - `scripts/`
+- `tests/`
 - `README.md`
-
-## Disallowed Targets
-
-- deployment or infrastructure config
-- arbitrary shell access outside helper scripts
-- secrets or local machine state
-
-## Operating Rules
-
-1. Prefer narrow edits to one capability at a time.
-2. Run `npm run validate` and `npm run evals` before proposing a PR.
-3. Use `npm run self-improve -- --title "..." --problem "..."` to prepare a change summary.
-4. Never auto-merge; every PR requires human review.
+- `AGENTS.md`

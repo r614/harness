@@ -1,12 +1,17 @@
-import { readFile } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import answerExtension from "./answer.ts";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
+const SKILLS_DIR = join(ROOT, "skills");
 
-async function readText(relativePath: string) {
-  return readFile(join(ROOT, relativePath), "utf8");
+async function listSkillEntries() {
+  const entries = await readdir(SKILLS_DIR, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort((a, b) => a.localeCompare(b));
 }
 
 export default function (pi: any) {
@@ -18,25 +23,24 @@ export default function (pi: any) {
       return [
         "Harness package loaded.",
         "",
-        "Production-usable today:",
-        "- repo-operator: repo-scoped self-improvement workflow with eval-backed PR summaries",
+        "Available today:",
+        "- answer: interactive extraction of unanswered questions from the last assistant message",
+        "- autoresearch: iterative optimization workflow helpers with logging and dashboard UI",
         "- gmail-workspace: Gmail search/read/draft/slop-triage workflows through local gws",
         "- calendar-workspace: Calendar list/draft/apply workflows through local gws",
         "- browser-runtime: persistent local Chrome-backed browser sessions with structured actions",
-        "- answer: interactive extraction of unanswered questions from the last assistant message",
+        "- context: session and context-window inspection helpers",
+        "- files: interactive file browser for repo and session-referenced files",
+        "- review: review workflows for local changes, branches, commits, folders, and PRs",
         "",
         "Requires local setup:",
         "- install and authenticate the Google Workspace CLI (`gws`) for Gmail/Calendar commands",
         "- local Google Chrome or Chromium for browser-runtime",
         "",
-        "Scaffolding / future work:",
-        "- intercepted-commands/: placeholder wrappers, not part of the production workflow",
-        "- web-browser: imported supporting guidance, superseded by browser-runtime for local automation",
-        "",
-        "Available resources:",
+        "Package layout:",
+        "- extensions/: runtime commands and UI helpers",
         "- skills/: on-demand capability instructions",
-        "- extensions/: runtime commands and guardrails",
-        "- manifests/: explicit package policies",
+        "- themes/: JSON themes",
         "",
         "Try /harness-skills next."
       ].join("\n");
@@ -46,9 +50,8 @@ export default function (pi: any) {
   pi.registerCommand("harness-skills", {
     description: "List the built-in Harness skills.",
     handler: async () => {
-      const raw = await readText("manifests/skills.json");
-      const manifest = JSON.parse(raw);
-      return manifest.skills.map((skill: { name: string; path: string }) => `- ${skill.name}: ${skill.path}`).join("\n");
+      const skills = await listSkillEntries();
+      return skills.map((skill) => `- ${skill}: skills/${skill}/SKILL.md`).join("\n");
     }
   });
 }
