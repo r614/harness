@@ -33,6 +33,7 @@ Harness exposes package resources through directory-based Pi metadata:
 - `answer` — interactive extraction of unanswered questions from the last assistant response
 - `autoresearch` — iterative optimization workflow helpers with logging and dashboard UI
 - `google-workspace` — Gmail and Calendar workflows through the local `gws` CLI
+- `handoff` — generate a structured handoff prompt and open a fresh session with it prefilled
 - `review` — code review workflows for local changes, branches, commits, folders, and PRs
 - `subagent` — persisted role-based subagents with single/parallel/chain execution, live inspection, and steering via `/subagents`
 - `todos` — file-based todo management with a tool and interactive `/todos` UI
