@@ -214,6 +214,15 @@ function shortenPath(p: string, cwd: string): string {
 	return rp;
 }
 
+function getExtensionDisplayName(extensionPath: string): string {
+	if (extensionPath === "<unknown>") return extensionPath;
+	const base = path.basename(extensionPath);
+	if (["index.ts", "index.mjs", "index.js", "context.json"].includes(base)) {
+		return path.basename(path.dirname(extensionPath));
+	}
+	return base.replace(/\.(ts|mjs|js|json)$/i, "");
+}
+
 function renderUsageBar(
 	theme: any,
 	parts: { system: number; tools: number; convo: number; remaining: number },
@@ -485,7 +494,7 @@ export default function contextExtension(pi: ExtensionAPI) {
 				extensionsByPath.set(p, arr);
 			}
 			const extensionFiles = [...extensionsByPath.keys()]
-				.map((p) => (p === "<unknown>" ? p : path.basename(p)))
+				.map((p) => getExtensionDisplayName(p))
 				.sort((a, b) => a.localeCompare(b));
 
 			const skills = skillCmds

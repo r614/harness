@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
-const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
+const ROOT = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
 
 type CommandContext = {
   cwd: string;
@@ -19,7 +19,7 @@ function parseJsonArgs(args: string[]) {
 }
 
 async function runTask(input: unknown, ctx: CommandContext) {
-  const modulePath = resolve(ROOT, "scripts/google-workspace.mjs");
+  const modulePath = resolve(ROOT, "extensions/google-workspace/scripts/google-workspace.mjs");
   const workspace = await import(modulePath);
   return workspace.runWorkspaceTask(input, { cwd: ctx.cwd || ROOT });
 }
