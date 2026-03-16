@@ -27,43 +27,12 @@ Harness exposes package resources through directory-based Pi metadata:
 - `skills/`
 - `themes/`
 
-## Structure
-
-```text
-.
-├── AGENTS.md
-├── README.md
-├── package.json
-├── tsconfig.json
-├── commands/
-├── extensions/
-│   ├── answer/index.ts
-│   ├── autoresearch/
-│   │   ├── index.ts
-│   │   └── scripts/
-│   ├── context/
-│   │   ├── context.json
-│   │   ├── index.mjs
-│   │   └── index.ts
-│   ├── files/index.ts
-│   ├── google-workspace/
-│   │   ├── index.ts
-│   │   └── scripts/
-│   └── review/index.ts
-├── prompts/
-├── scripts/
-├── skills/
-└── themes/
-```
-
 ## Included capabilities
 
 ### Extensions
 
 - `answer` — interactive extraction of unanswered questions from the last assistant response
 - `autoresearch` — iterative optimization workflow helpers with logging and dashboard UI
-- `context` — session/context inspection helpers
-- `files` — interactive file browser for repo and session-referenced files
 - `google-workspace` — Gmail and Calendar workflows through the local `gws` CLI
 - `review` — code review workflows for local changes, branches, commits, folders, and PRs
 
@@ -76,7 +45,6 @@ Harness includes skills for:
 - `github`
 - `gmail`
 - `native-web-search`
-- `summarize`
 - `web-browser`
 
 ### Themes
@@ -112,3 +80,7 @@ npm install
 ## Attribution
 
 Parts of this repository’s structure and selected capabilities were inspired by or adapted from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff), licensed under Apache-2.0.
+
+Extensions from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): answer.ts, todos.ts
+
+Skills from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): commit, github, native-web-search, web-browser
