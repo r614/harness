@@ -34,6 +34,7 @@ Harness exposes package resources through directory-based Pi metadata:
 - `autoresearch` — iterative optimization workflow helpers with logging and dashboard UI
 - `google-workspace` — Gmail and Calendar workflows through the local `gws` CLI
 - `review` — code review workflows for local changes, branches, commits, folders, and PRs
+- `todos` — file-based todo management with a tool and interactive `/todos` UI
 
 ### Skills
 
@@ -78,7 +79,7 @@ npm install
 
 ## Attribution
 
-Extensions from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): answer.ts, todos.ts
+Extensions adapted from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): `answer.ts`, `todos.ts`
 
 Skills from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): commit, github, native-web-search
 
