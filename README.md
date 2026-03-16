@@ -44,7 +44,7 @@ Harness includes skills for:
 - `github`
 - `gmail`
 - `native-web-search`
-- `web-browser`
+- `web-browser` — target-based live browser control over Chrome DevTools Protocol, plus logging/debugging helpers
 
 ### Themes
 
@@ -78,8 +78,8 @@ npm install
 
 ## Attribution
 
-Parts of this repository’s structure and selected capabilities were inspired by or adapted from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff), licensed under Apache-2.0.
-
 Extensions from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): answer.ts, todos.ts
 
-Skills from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): commit, github, native-web-search, web-browser
+Skills from [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff): commit, github, native-web-search
+
+Browser CDP workflow inspiration: [pasky/chrome-cdp-skill](https://github.com/pasky/chrome-cdp-skill)

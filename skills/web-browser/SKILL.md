@@ -1,93 +1,104 @@
 ---
 name: web-browser
-description: "Allows to interact with web pages by performing actions such as clicking buttons, filling out forms, and navigating links. It works by remote controlling Google Chrome or Chromium browsers using the Chrome DevTools Protocol (CDP). When Claude needs to browse the web, it can use this skill to do so."
+description: Interact with a live local Chrome-family browser session over CDP, using target-based commands for listing tabs, inspecting pages, clicking, typing, and debugging.
 license: Stolen from Mario
 ---
 
 # Web Browser Skill
 
-Minimal CDP tools for collaborative site exploration.
+Target-based Chrome DevTools Protocol tooling for live browser sessions.
 
-> Harness note: this is imported advanced guidance. It is not part of the fixture-backed production workflow in this repo unless your Pi runtime already provides the required browser automation support.
+> Harness note: this skill now centers on `scripts/cdp.mjs`. Helper scripts for cookie dismissal, picking, and logging remain available, but the primary workflow is tab selection via `list` and a target prefix.
 
-## Start Chrome
+## Prerequisites
 
-```bash
-./scripts/start.js              # Fresh profile
-./scripts/start.js --profile    # Copy your profile (cookies, logins)
-```
+- Chrome-family browser with remote debugging enabled in `chrome://inspect/#remote-debugging`
+- Node.js 22+
+- Optional: set `CDP_PORT_FILE` if your browser stores `DevToolsActivePort` in a non-standard location
 
-Start Chrome on `:9222` with remote debugging.
+Supported browser discovery includes Chrome, Chromium, Brave, Edge, and Vivaldi.
 
-## Navigate
+## Primary workflow
 
-```bash
-./scripts/nav.js https://example.com
-./scripts/nav.js https://example.com --new
-```
-
-Navigate current tab or open new tab.
-
-## Evaluate JavaScript
+List open tabs first:
 
 ```bash
-./scripts/eval.js 'document.title'
-./scripts/eval.js 'document.querySelectorAll("a").length'
-./scripts/eval.js 'JSON.stringify(Array.from(document.querySelectorAll("a")).map(a => ({ text: a.textContent.trim(), href: a.href })).filter(link => !link.href.startsWith("https://")))'
+./scripts/cdp.mjs list
 ```
 
-Execute JavaScript in active tab (async context).  Be careful with string escaping, best to use single quotes.
+Use the unique target prefix from `list` for all tab commands.
 
-## Screenshot
+## Core commands
 
 ```bash
-./scripts/screenshot.js
+./scripts/cdp.mjs list
+./scripts/cdp.mjs shot <target> [file]
+./scripts/cdp.mjs snap <target>
+./scripts/cdp.mjs html <target> [".selector"]
+./scripts/cdp.mjs eval <target> "expression"
+./scripts/cdp.mjs nav <target> https://example.com
+./scripts/cdp.mjs net <target>
+./scripts/cdp.mjs click <target> "selector"
+./scripts/cdp.mjs clickxy <target> <x> <y>
+./scripts/cdp.mjs type <target> "text"
+./scripts/cdp.mjs loadall <target> "selector"
+./scripts/cdp.mjs evalraw <target> <method> [json]
+./scripts/cdp.mjs open [url]
+./scripts/cdp.mjs stop [target]
 ```
 
-Screenshot current viewport, returns temp file path
+Notes:
+- `clickxy` uses CSS pixels, not screenshot image pixels
+- `type` uses CDP input events and is better than JS eval for text entry
+- first access to a tab may trigger Chrome's approval prompt; repeated commands reuse a persistent daemon
 
-## Pick Elements
+## Helper scripts
+
+### Pick elements
 
 ```bash
 ./scripts/pick.js "Click the submit button"
 ```
 
-Interactive element picker. Click to select, Cmd/Ctrl+Click for multi-select, Enter to finish.
+Interactive picker for the active page.
 
-## Dismiss Cookie Dialogs
+### Dismiss cookie dialogs
 
 ```bash
-./scripts/dismiss-cookies.js          # Accept cookies
-./scripts/dismiss-cookies.js --reject # Reject cookies (where possible)
+./scripts/dismiss-cookies.js
+./scripts/dismiss-cookies.js --reject
 ```
 
-Automatically dismisses EU cookie consent dialogs.
+Runs against the active page and attempts to accept or reject common consent dialogs.
 
-Run after navigating to a page:
+### Background logging
+
 ```bash
-./scripts/nav.js https://example.com && ./scripts/dismiss-cookies.js
+./scripts/watch.js
+./scripts/logs-tail.js
+./scripts/logs-tail.js --follow
+./scripts/net-summary.js
 ```
 
-## Background Logging (Console + Errors + Network)
+Writes JSONL logs to:
 
-Automatically started by `start.js` and writes JSONL logs to:
-
-```
+```text
 ~/.cache/agent-web/logs/YYYY-MM-DD/<targetId>.jsonl
 ```
 
-Manually start:
+## Legacy wrappers
+
+These wrappers now delegate to `cdp.mjs`:
+
 ```bash
-./scripts/watch.js
+./scripts/nav.js <target> <url>
+./scripts/eval.js <target> "expression"
+./scripts/screenshot.js <target> [file]
 ```
 
-Tail latest log:
-```bash
-./scripts/logs-tail.js           # dump current log and exit
-./scripts/logs-tail.js --follow  # keep following
-```
+## Best practices
 
-Summarize network responses:
-```bash
-./scripts/net-summary.js
-```
+- Prefer stable selectors over index-based DOM access across multiple commands
+- Use `snap` for semantic structure and `html` when you need exact markup
+- Use `evalraw` for unsupported CDP methods instead of adding one-off scripts
+- Use browser interaction only when the user explicitly wants page inspection or manipulation

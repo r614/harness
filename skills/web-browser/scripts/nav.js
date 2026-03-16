@@ -1,65 +1,19 @@
 #!/usr/bin/env node
 
-import { connect } from "./cdp.js";
+import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const DEBUG = process.env.DEBUG === "1";
-const log = DEBUG ? (...args) => console.error("[debug]", ...args) : () => {};
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const cdpPath = join(scriptDir, "cdp.mjs");
+const args = process.argv.slice(2);
 
-const url = process.argv[2];
-const newTab = process.argv[3] === "--new";
-
-if (!url) {
-  console.log("Usage: nav.js <url> [--new]");
-  console.log("\nExamples:");
-  console.log("  nav.js https://example.com       # Navigate current tab");
-  console.log("  nav.js https://example.com --new # Open in new tab");
+if (args.length === 0) {
+  console.log("Usage: nav.js <target> <url>");
+  console.log("       nav.js --new <url>");
   process.exit(1);
 }
 
-// Global timeout
-const globalTimeout = setTimeout(() => {
-  console.error("✗ Global timeout exceeded (45s)");
-  process.exit(1);
-}, 45000);
-
-try {
-  log("connecting...");
-  const cdp = await connect(5000);
-
-  log("getting pages...");
-  let targetId;
-
-  if (newTab) {
-    log("creating new tab...");
-    const { targetId: newTargetId } = await cdp.send("Target.createTarget", {
-      url: "about:blank",
-    });
-    targetId = newTargetId;
-  } else {
-    const pages = await cdp.getPages();
-    const page = pages.at(-1);
-    if (!page) {
-      console.error("✗ No active tab found");
-      process.exit(1);
-    }
-    targetId = page.targetId;
-  }
-
-  log("attaching to page...");
-  const sessionId = await cdp.attachToPage(targetId);
-
-  log("navigating...");
-  await cdp.navigate(sessionId, url);
-
-  console.log(newTab ? "✓ Opened:" : "✓ Navigated to:", url);
-
-  log("closing...");
-  cdp.close();
-  log("done");
-} catch (e) {
-  console.error("✗", e.message);
-  process.exit(1);
-} finally {
-  clearTimeout(globalTimeout);
-  setTimeout(() => process.exit(0), 100);
-}
+const mapped = args[0] === "--new" ? ["open", args[1] || "about:blank"] : ["nav", ...args];
+const result = spawnSync(process.execPath, [cdpPath, ...mapped], { stdio: "inherit" });
+process.exit(result.status ?? 1);
